@@ -1,13 +1,20 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {};
-const addStudent = createAsyncThunk();
+const initialState = {
+  listStudent: [],
+  updateStudent: undefined,
+};
+
 const addSlice = createSlice({
   name: "add",
   initialState,
-  reducers: {},
+  reducers: {
+    ADD_STUDENT: (state, action) => {
+      state.listStudent.push(action.payload);
+    },
+  },
 });
 
-export const {} = addSlice.actions;
+export const { ADD_STUDENT } = addSlice.actions;
 
 export default addSlice.reducer;

@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { Container } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import { sortUserPlugins } from "vite";
+import { useDispatch, useSelector } from "react-redux";
+import { ADD_STUDENT } from "../redux/slice/addSlice";
+
 const Form = () => {
+  const listStudent = useSelector((state) => state.add.listStudent);
   const [student, setStudent] = useState({
     maSinhVien: "",
     ten: "",
@@ -15,37 +18,47 @@ const Form = () => {
     phone: "",
     email: "",
   });
-  const validate = (name) => {
+  const disPatch = useDispatch();
+  const validate = (name, value) => {
     switch (name) {
       case "maSinhVien":
-        if (student.maSinhVien == "") {
+        let index = listStudent.findIndex((item) => item.maSinhVien == value);
+
+        if (value == "") {
           return "Mã sinh viên không được để trống";
+        } else if (index > -1) {
+          return "Mã sinh viên đã tồn tại";
         } else {
           return "";
         }
       case "ten":
-        if (student.ten == "") {
+        if (value == "") {
           return "Tên không được để trống";
         } else {
           return "";
         }
       case "phone":
-        if (student.phone == "") {
+        var regex = /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/;
+        let index2 = listStudent.findIndex((item) => item.phone == value);
+        if (value == "") {
           return "Số điện thoại không được để trống";
-        } else if (
-          student.phone.match(new RegExp("/^(()?d{3}())?(-|s)?d{3}(-|s)d{4}$/"))
-        ) {
+        } else if (!student.phone.match(regex)) {
           return "Số điện thoại không đúng";
+        } else if (index2 > -1) {
+          return "Số điện thoại đã tồn tại";
         } else {
           return "";
         }
       case "email":
         var validRegex =
           /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-        if (student.email == "") {
+        let index1 = listStudent.findIndex((item) => item.email == value);
+        if (value == "") {
           return "Email không được để trống";
         } else if (!student.email.match(validRegex)) {
           return "Email không đúng";
+        } else if (index1 > -1) {
+          return "Email đã tồn tại";
         } else {
           return "";
         }
@@ -58,24 +71,19 @@ const Form = () => {
 
   const submitData = (e) => {
     e.preventDefault();
-
     let validation = {};
-    Object.keys(err).forEach((name) => {
-      let errMess = validate(name);
-      validation[name] = { ...validation, [name]: errMess };
-    });
-    setErr(validation);
-    let check = true;
-    Object.keys(err).forEach((name) => {
-      if (err[name] != "") {
-        check = false;
+    Object.keys(student).forEach((name) => {
+      let errMess = validate(name, student[name]);
+      if (errMess && errMess.length > 0) {
+        validation[name] = errMess;
       }
     });
 
-    if (!check) {
+    if (Object.keys(validation).length > 0) {
+      setErr(validation);
       return;
     }
-    console.log(student);
+    disPatch(ADD_STUDENT(student));
   };
 
   return (
@@ -89,6 +97,7 @@ const Form = () => {
             <div className="form1">
               <label htmlFor="">Mã Sinh viên</label>
               <input
+                value={student.maSinhVien}
                 onChange={changeData("maSinhVien")}
                 type="text"
                 placeholder="MaSV"
@@ -101,6 +110,7 @@ const Form = () => {
                 onChange={changeData("ten")}
                 type="text"
                 placeholder="Nguyen Van A"
+                value={student.ten}
               />
               <small className="text-danger">{err.ten}</small>
             </div>
@@ -112,6 +122,7 @@ const Form = () => {
                 onChange={changeData("phone")}
                 type="text"
                 placeholder="Số điện thoại"
+                value={student.phone}
               />
               <small className="text-danger">{err.phone}</small>
             </div>
@@ -121,11 +132,12 @@ const Form = () => {
                 onChange={changeData("email")}
                 type="text"
                 placeholder="Example@gmail.com"
+                value={student.email}
               />
               <small className="text-danger">{err.email}</small>
             </div>
           </div>
-          <Button type="submit" variant="success">
+          <Button className="mt-3" type="submit" variant="success">
             Thêm sinh viên
           </Button>{" "}
         </form>
