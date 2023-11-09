@@ -1,0 +1,45 @@
+header {
+  text-align: center;
+  background-color: rgb(37, 36, 36);
+  color: white;
+  padding: 8px 0;
+  font-size: 18px;
+}
+.body {
+  margin-top: 20px;
+}
+.line1 {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  width: 100%;
+  gap: 30px;
+}
+.line2 {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 30px;
+}
+label {
+  display: block !important;
+}
+.form1 {
+  width: 100%;
+}
+.form2 {
+  width: 100%;
+}
+.form3 {
+  width: 100%;
+}
+.form4 {
+  width: 100%;
+}
+input {
+  width: 100%;
+  padding: 5px 5px;
+  border-radius: 5px;
+  outline: none;
+  border: 1px solid #ccc;
+}
