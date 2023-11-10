@@ -21,9 +21,8 @@ const addSlice = createSlice({
       state.updateStudent = action.payload;
     },
     UPDATE_STUDENT: (state, action) => {
-      console.log(action.payload);
       let index = state.listStudent.findIndex(
-        (item) => (item.maSinhVien = action.payload.maSinhVien)
+        (item) => item.maSinhVien == action.payload.maSinhVien
       );
       if (index > -1) {
         state.listStudent[index] = action.payload;

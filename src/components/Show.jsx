@@ -19,7 +19,7 @@ function Show() {
       <div className="search-componet">
         <label htmlFor="Search">Search</label>
         <div className="search">
-          <i class="fa-solid fa-magnifying-glass"></i>
+          <i className="fa-solid fa-magnifying-glass"></i>
           <input
             onChange={(e) => disPatch(SEARCH_STUDENT(e.target.value))}
             type="text"
