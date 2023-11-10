@@ -43,3 +43,7 @@ input {
   outline: none;
   border: 1px solid #ccc;
 }
+i {
+  cursor: pointer;
+  padding: 5px;
+}

@@ -1,0 +1,18 @@
+.search {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  width: 250px;
+  border-radius: 999px;
+  padding: 3px;
+}
+.search input {
+  width: 200px;
+  border: none;
+  outline: none;
+}
+.search-componet {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

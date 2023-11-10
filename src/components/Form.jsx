@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { ADD_STUDENT } from "../redux/slice/addSlice";
+import { ADD_STUDENT, UPDATE_STUDENT } from "../redux/slice/addSlice";
 
 const Form = () => {
   const listStudent = useSelector((state) => state.add.listStudent);
@@ -18,6 +18,20 @@ const Form = () => {
     phone: "",
     email: "",
   });
+  const EditST = useSelector((state) => state.add.updateStudent);
+
+  useEffect(() => {
+    if (EditST != undefined) {
+      setStudent(EditST);
+      setErr({
+        maSinhVien: "",
+        ten: "",
+        phone: "",
+        email: "",
+      });
+    }
+  }, [EditST]);
+
   const disPatch = useDispatch();
   const validate = (name, value) => {
     switch (name) {
@@ -26,8 +40,10 @@ const Form = () => {
 
         if (value == "") {
           return "Mã sinh viên không được để trống";
-        } else if (index > -1) {
-          return "Mã sinh viên đã tồn tại";
+        } else if (EditST == undefined) {
+          if (index > -1) {
+            return "Mã sinh viên đã tồn tại";
+          }
         } else {
           return "";
         }
@@ -44,8 +60,10 @@ const Form = () => {
           return "Số điện thoại không được để trống";
         } else if (!student.phone.match(regex)) {
           return "Số điện thoại không đúng";
-        } else if (index2 > -1) {
-          return "Số điện thoại đã tồn tại";
+        } else if (EditST == undefined) {
+          if (index2 > -1) {
+            return "Số điện thoại đã tồn tại";
+          }
         } else {
           return "";
         }
@@ -57,8 +75,10 @@ const Form = () => {
           return "Email không được để trống";
         } else if (!student.email.match(validRegex)) {
           return "Email không đúng";
-        } else if (index1 > -1) {
-          return "Email đã tồn tại";
+        } else if (EditST == undefined) {
+          if (index1 > -1) {
+            return "Email đã tồn tai";
+          }
         } else {
           return "";
         }
@@ -83,7 +103,29 @@ const Form = () => {
       setErr(validation);
       return;
     }
-    disPatch(ADD_STUDENT(student));
+    if (EditST != null) {
+      disPatch(UPDATE_STUDENT(student));
+      setErr({
+        maSinhVien: "",
+        ten: "",
+        phone: "",
+        email: "",
+      });
+    } else {
+      disPatch(ADD_STUDENT(student));
+      setErr({
+        maSinhVien: "",
+        ten: "",
+        phone: "",
+        email: "",
+      });
+    }
+    setStudent({
+      maSinhVien: "",
+      ten: "",
+      phone: "",
+      email: "",
+    });
   };
 
   return (
@@ -97,6 +139,7 @@ const Form = () => {
             <div className="form1">
               <label htmlFor="">Mã Sinh viên</label>
               <input
+                disabled={EditST != undefined ? true : false}
                 value={student.maSinhVien}
                 onChange={changeData("maSinhVien")}
                 type="text"
@@ -138,7 +181,7 @@ const Form = () => {
             </div>
           </div>
           <Button className="mt-3" type="submit" variant="success">
-            Thêm sinh viên
+            {EditST != null ? "Sửa sinh viên" : "Thêm sinh viên"}
           </Button>{" "}
         </form>
       </div>
